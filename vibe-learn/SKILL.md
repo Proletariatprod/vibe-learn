@@ -60,6 +60,8 @@ Read `learning/concepts.md` and `learning/profile.md` if they exist. You need to
 - Which are **new** → full explanation at every level. Check the `builds on` column: if a new concept's prerequisite is itself still unlearned, teach the prerequisite first or flag it — never silently assume it.
 - Any **recorded misconceptions** touching today's concepts → correct them explicitly in this report (see references/ledger-format.md). Repairing a wrong mental model teaches more than introducing a new one.
 
+Also read the **global ledger** at `~/.claude/vibe-learn/concepts.md` if it exists. A concept known there but new to this project gets a brief callback ("known from your other projects — same idea here"), not a full re-explanation, and enters the local ledger at `developing`. The local ledger stays authoritative for this project; the global one only prevents re-teaching `useState` from scratch in every new project.
+
 This is the mechanism that makes reports shrink and deepen over time. Skipping this step produces the #1 failure mode: re-explaining variables for the 15th time to someone who's past it, which makes the reports feel like spam.
 
 ### Step 3: Choose what's worth teaching
@@ -86,7 +88,7 @@ Total report length: **150–400 lines of markdown for early reports, shrinking 
 
 ### Step 5: Update the ledger, dashboard, and inbox
 
-In `learning/concepts.md`: add new concepts (with their `builds on` prerequisites), increment counts on repeated ones, promote to "known" at 3 sightings, and record or clear misconceptions. In `learning/profile.md`: update level estimates if you saw evidence (user asked a Level 3 question → they're growing; user was confused by a Level 1 concept → recalibrate). Regenerate `learning/README.md` — the dashboard (see references/ledger-format.md for the format). Finally, clear `learning/inbox.md` — its entries are now covered by this report.
+In `learning/concepts.md`: add new concepts (with their `builds on` prerequisites), increment counts on repeated ones, promote to "known" at 3 sightings, and record or clear misconceptions. In `learning/profile.md`: update level estimates if you saw evidence (user asked a Level 3 question → they're growing; user was confused by a Level 1 concept → recalibrate). Regenerate `learning/README.md` — the dashboard (see references/ledger-format.md for the format). Propagate to the global ledger (`~/.claude/vibe-learn/concepts.md`, create it on first promotion): concepts promoted to `known` here become known globally; demotions stay local. Finally, clear `learning/inbox.md` — its entries are now covered by this report.
 
 ### Step 6: Close the loop in chat
 

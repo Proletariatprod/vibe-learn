@@ -54,7 +54,9 @@ What a senior dev would double-check: the out-of-order problem isn't fully dead.
 
 > "the search feels laggy and it's hammering the database"
 
-Your sentence named two symptoms; the code made three decisions you didn't specify: (1) debounce rather than throttle — that was a judgment call about what "feels right" for search; (2) 300ms as the wait — long enough to skip mid-word requests, short enough to feel instant (typical range is 200–500ms); (3) the 2-character minimum, which you never mentioned but kills the most expensive queries of all. Unstated decisions like these are worth spotting: next time you could say "debounce it at 500ms" and control the feel yourself.
+Your sentence named two symptoms; the code made three decisions you didn't specify: (1) debounce rather than throttle — that was a judgment call about what "feels right" for search; (2) 300ms as the wait — long enough to skip mid-word requests, short enough to feel instant (typical range is 200–500ms); (3) the 2-character minimum, which you never mentioned but kills the most expensive queries of all. Unstated decisions like these are worth spotting — they're yours to control once you can see them.
+
+**Try this next time:** "the search is hammering the database — debounce it at 300ms, skip searches under 2 characters, and cancel stale requests so old results can't overwrite new ones."
 
 ## ❓ One question
 

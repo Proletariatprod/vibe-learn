@@ -71,6 +71,27 @@ Rules:
 - Domain levels shape which layers get the most care: a Level 0 domain gets a rich Level 0–1 and a brief Level 3; a Level 2.5 domain gets one-line Levels 0–1 and a deep Level 3. All levels always appear (the user may share reports, or regress after a break) — what changes is the weight.
 - The report index is the user's table of contents for their entire learning history. Keep it current; it costs one line per report.
 
+## ~/.claude/vibe-learn/concepts.md (global ledger, cross-project)
+
+The user's knowledge travels with them; project ledgers don't. The global ledger stores **floors, not truth** — the project ledger stays authoritative, the global one only prevents re-teaching `useState` from scratch in project number five.
+
+```markdown
+# Global Concept Ledger
+Concepts known across all vibe-learn projects. Floors only — projects hold the detail.
+
+| Concept | Domain | Status | Seen | Projects | Last seen | One-line definition |
+|---|---|---|---|---|---|---|
+| useState | react | known | 9 | 3 | 2026-07-15 | A component's memory that survives re-renders |
+| middleware | backend | known | 4 | 2 | 2026-07-12 | Code that runs between request and response, every time |
+```
+
+Rules:
+- Created lazily — on the first promotion to `known` in any project. No setup step.
+- **Up only:** promotions to `known` propagate here; demotions never do. Confusion in one project is noise; competence demonstrated anywhere is signal.
+- **Reading it:** a concept known globally but absent from the local ledger enters locally at `developing` with a brief callback ("known from your other projects"), never a full re-explanation — and never silently as `known`, since context differs across stacks.
+- Only `known` concepts live here. `new`/`developing` are project business.
+- `Seen` sums sightings across projects; `Projects` counts distinct projects; `Last seen` is a date (YYYY-MM-DD), since report numbers are meaningless across projects.
+
 ## learning/inbox.md (session capture log)
 
 Append-only during the session; compiled into the digest and then cleared. One line per meaningful change:
