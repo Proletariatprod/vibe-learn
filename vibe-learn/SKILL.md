@@ -1,6 +1,6 @@
 ---
 name: vibe-learn
-description: Generate a layered learning report after completing code changes, so the user learns from every update they vibe code. Explains each change at four depths (plain English → concepts → the actual code → engineering judgment) and maintains a cumulative concept ledger so explanations compress as the user levels up. Use this skill EVERY TIME you finish writing, editing, or fixing code in a project where a learning/ directory exists or the user has asked to learn as they build. Also use when the user says things like "explain what you just did", "learning report", "what did that change do", "teach me what we built", "/learn", or asks to understand their codebase changes. Also use in BASELINE MODE when the user wants retroactive reports on an existing codebase — triggers like "vibe-learn baseline", "catch me up on this codebase", "run this on my existing project", or "backlog reports".
+description: Generate a layered learning report after completing code changes, so the user learns from every update they vibe code. Explains each change at four depths (plain English → concepts → the actual code → engineering judgment) and maintains a cumulative concept ledger so explanations compress as the user levels up. Use this skill EVERY TIME you finish writing, editing, or fixing code in a project where a learning/ directory exists or the user has asked to learn as they build. Also use when the user says things like "explain what you just did", "learning report", "what did that change do", "teach me what we built", "/learn", or asks to understand their codebase changes. Also use in QUIZ MODE when the user says "quiz me", "/quiz", or "test what I've learned", and in DEEPER MODE when they ask to go deeper on a past report ("walk me through report 007", "explain report 3's code interactively"). Also use in BASELINE MODE when the user wants retroactive reports on an existing codebase — triggers like "vibe-learn baseline", "catch me up on this codebase", "run this on my existing project", or "backlog reports".
 ---
 
 # Vibe Learn
@@ -11,10 +11,20 @@ Turn every code change into a learning opportunity. After completing changes, ge
 
 ## When to run
 
-- Automatically after completing any meaningful code change (new feature, bug fix, refactor, config change that affects behavior), IF the project contains a `learning/` directory OR the user has previously asked to learn as they build.
+- **Default cadence: one digest per working session.** As you make meaningful changes, capture them to the inbox (see "During the session" below); when the session settles — the user stops firing requests, says they're done, or asks for the report — compile ONE digest covering the session. A lone meaningful change can get its report immediately.
+- Only run automatically IF the project contains a `learning/` directory OR the user has previously asked to learn as they build.
 - On explicit request: "explain what you just did", "learning report", "/learn".
 - NOT for trivial changes: fixing a typo, renaming a variable, formatting, bumping a version number. Skip those silently — a report on nothing teaches nothing and trains the user to ignore reports.
-- If several small related changes happen in one working session, write ONE report covering the session, not one per edit.
+
+## During the session: capture to the inbox
+
+Report quality dies when it depends on remembering a 3-hour session at the end. So capture as you go: **immediately after completing each meaningful change, append one line to `learning/inbox.md`:**
+
+```
+- [YYYY-MM-DD HH:MM] added debounce to search input (src/Search.tsx) — teachable: debouncing, stale responses | user asked: "search feels laggy"
+```
+
+One line per change: what happened, key file(s), candidate teachable concepts, and the user's words that triggered it (you'll need those for the "Your words → this code" section). This costs seconds and makes the digest a compilation job instead of a memory test. At digest time, the inbox is your source of truth; clear it after the report is written. If the inbox has leftover entries from a previous session that never got a report, fold them into this digest — that's the safety net working.
 
 ## First run in a project (setup)
 
@@ -25,7 +35,9 @@ If `learning/` does not exist and the user wants learning reports:
    learning/
    ├── reports/          # one markdown file per report
    ├── concepts.md       # cumulative concept ledger (see references/ledger-format.md)
-   └── profile.md        # learner level + preferences (see references/ledger-format.md)
+   ├── profile.md        # learner level + preferences (see references/ledger-format.md)
+   ├── inbox.md          # session capture log, compiled into each digest then cleared
+   └── README.md         # auto-maintained progress dashboard (see references/ledger-format.md)
    ```
 2. Ask the user two quick calibration questions (or infer from conversation): roughly how much coding do they understand today, and do they want reports on everything or only on request?
 3. Add this line to the project's `CLAUDE.md` (create it if needed) so future sessions trigger reliably:
@@ -38,14 +50,15 @@ If `learning/` does not exist and the user wants learning reports:
 
 ### Step 1: Ground yourself in the real change
 
-Run `git diff HEAD` (or `git diff` + `git diff --cached`, or review the edits you just made this session if git isn't in use). Every code snippet in the report must be an **exact copy from the real files** — never simplified, never paraphrased. The user should be able to open the file and see the same code. This is non-negotiable: paraphrased code teaches a codebase that doesn't exist.
+Read `learning/inbox.md` first — it's the session's capture log and the digest's table of contents. Then run `git diff HEAD` (or `git diff` + `git diff --cached`, or review the edits you just made this session if git isn't in use) to get the actual code. Every code snippet in the report must be an **exact copy from the real files** — never simplified, never paraphrased. The user should be able to open the file and see the same code. This is non-negotiable: paraphrased code teaches a codebase that doesn't exist.
 
 ### Step 2: Read the ledger
 
 Read `learning/concepts.md` and `learning/profile.md` if they exist. You need to know:
 - Which concepts are **known** (seen 3+ times or user-confirmed) → do NOT re-explain; reference by name only.
 - Which are **developing** (seen 1–2 times) → brief callback ("state again — same idea as report 004, the whiteboard that redraws").
-- Which are **new** → full explanation at every level.
+- Which are **new** → full explanation at every level. Check the `builds on` column: if a new concept's prerequisite is itself still unlearned, teach the prerequisite first or flag it — never silently assume it.
+- Any **recorded misconceptions** touching today's concepts → correct them explicitly in this report (see references/ledger-format.md). Repairing a wrong mental model teaches more than introducing a new one.
 
 This is the mechanism that makes reports shrink and deepen over time. Skipping this step produces the #1 failure mode: re-explaining variables for the 15th time to someone who's past it, which makes the reports feel like spam.
 
@@ -66,20 +79,45 @@ Save to `learning/reports/NNN-short-slug.md` (zero-padded sequence: `001-`, `002
 - **🧩 Level 1 — The ideas involved**: name the 1–3 concepts (max 3 new ones per report — cognitive load is real), each as: concept name → one-line plain definition → a metaphor fitted to THIS concept (not recycled) → where it shows up in this change. Count honestly: any concept you materially explain anywhere in the report (including at Level 2) counts as introduced — it goes in the header count, gets its Level 1 entry, and enters the ledger. Sneaking a fourth concept in via a code annotation is how reports bloat.
 - **🔍 Level 2 — The actual code**: walk the key parts of the real diff in **execution order** (the order things happen when the app runs), not file order. Exact snippets, ≤ 20 lines each, with a one-line annotation per interesting line. Include file paths so the user can open them.
 - **🏗️ Level 3 — Why this way**: the engineering judgment. Why this approach over the obvious alternative, what tradeoff was made, what could break, what a senior developer would double-check. This is where the user grows from "understands code" to "thinks like an engineer."
-- **🔗 Your words → this code**: quote or paraphrase what the user actually asked for, and trace how their plain-English request became these specific technical decisions. This closes the loop between prompting and outcome — it's how vibe coders learn to prompt better.
+- **🔗 Your words → this code**: quote or paraphrase what the user actually asked for (the inbox captured it), and trace how their plain-English request became these specific technical decisions. End with one **"Try this next time"** line: the concrete prompt the user *could have written* to specify the biggest unstated decision themselves. This closes the loop between prompting and outcome — it's how vibe coders learn to prompt better.
 - **❓ One question**: a single application-style quiz question about a *scenario* ("the page shows stale data after login — which of today's three files would you check first, and why?"), never definition recall ("what does API stand for?"). Put the answer in a `<details>` collapsible block.
 
 Total report length: **150–400 lines of markdown for early reports, shrinking toward 50–150 as the ledger fills with known concepts.** If your report exceeds this, you selected too much in Step 3.
 
-### Step 5: Update the ledger
+### Step 5: Update the ledger, dashboard, and inbox
 
-In `learning/concepts.md`: add new concepts, increment counts on repeated ones, promote to "known" at 3 sightings. In `learning/profile.md`: update level estimates if you saw evidence (user asked a Level 3 question → they're growing; user was confused by a Level 1 concept → recalibrate).
+In `learning/concepts.md`: add new concepts (with their `builds on` prerequisites), increment counts on repeated ones, promote to "known" at 3 sightings, and record or clear misconceptions. In `learning/profile.md`: update level estimates if you saw evidence (user asked a Level 3 question → they're growing; user was confused by a Level 1 concept → recalibrate). Regenerate `learning/README.md` — the dashboard (see references/ledger-format.md for the format). Finally, clear `learning/inbox.md` — its entries are now covered by this report.
 
 ### Step 6: Close the loop in chat
 
-After saving, tell the user in ONE short line: report number, the headline concept, and the report path. Do not paste the report into chat — that defeats the layered-reading design. Example: "📚 Learning report 007 saved (`learning/reports/007-auth-middleware.md`) — headline concept: middleware. Concepts now known: 12."
+After saving, refresh `learning/.last-report-state` if the project uses the Stop hook (see references/automation.md). Then tell the user in ONE short line: report number, the headline concept, and the report path. Do not paste the report into chat — that defeats the layered-reading design. Example: "📚 Learning report 007 saved (`learning/reports/007-auth-middleware.md`) — headline concept: middleware. Concepts now known: 12."
 
 Every 5th report, add: offer a 3-question review quiz drawn from concepts at "developing" status. Keep it optional and light.
+
+## Quiz mode (spaced review)
+
+Trigger: "quiz me", "/quiz", "test what I've learned" — or the standing offer every 5th report.
+
+1. Read the ledger. Select 3 concepts, prioritized by: (a) `developing` status, (b) oldest `last report` (most overdue), (c) any concept with a recorded misconception.
+2. Ask **one scenario question at a time**, in chat, same application-style rules as report quizzes — never definition recall. Wait for the answer before the next question.
+3. After each answer: confirm or gently correct with the one-line reasoning path. A correct answer counts as a sighting (may promote to `known`); a revealing miss records a misconception and may demote.
+4. Update the ledger and dashboard. Never show scores or streaks — end with what got promoted, framed as growth ("`middleware` is now known — it won't be re-explained again").
+
+## Deeper mode (interactive walkthrough of a past report)
+
+Trigger: "walk me through report 007", "go deeper on the auth report", "explain report 3's code to me".
+
+1. Open the report AND the real files it references (they may have drifted since — say so if they have).
+2. Teach interactively at one level deeper than the user's current domain level, in chat, checking understanding as you go rather than monologuing.
+3. This is a conversation, not a document — don't write a new report. Sightings and misconceptions observed here update the ledger like any other evidence.
+
+## Graduation (the exit ramp)
+
+When a domain reaches level 2.5+, reading reports is no longer the fastest way to learn — doing is. At the next relevant change in that domain, offer once:
+
+> "You're at level 2.5 on react/frontend. Want to try writing this next small change yourself? I'll review it like a senior dev — that's the fastest path from here."
+
+If they accept: let them write it, review with the same warmth as the reports (what works, one thing to reconsider, why). The review replaces that change's report. If they decline, don't re-offer for at least 5 reports — note the offer date in `profile.md`. Graduation is per-domain: someone writing their own React can still be reading Level 0 database reports.
 
 ## Baseline mode (existing projects / backlog)
 
@@ -110,6 +148,7 @@ For large codebases, offer to do baseline one subsystem per session rather than 
 4. **Recycled metaphors.** "It's like a recipe" for everything teaches nothing. Fit the metaphor to the concept: a database index is a book's index; middleware is airport security every passenger passes through; a race condition is two people editing the same whiteboard.
 5. **Re-explaining known concepts.** Read the ledger. Respect the user's growth.
 6. **Blocking the build.** If the user is mid-flow and firing rapid requests, hold the report until the session settles, then write one session report.
+7. **Digest from memory.** Writing the end-of-session digest by recalling the session instead of reading `learning/inbox.md`. Long sessions lose their middle that way — capture as you go, compile at the end.
 
 ## References
 

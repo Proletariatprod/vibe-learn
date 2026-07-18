@@ -24,6 +24,19 @@ Plus two sections no other tool has:
 
 A **concept ledger** (`learning/concepts.md`) tracks every concept across reports: `new` → `developing` (2 sightings) → `known` (3+). Known concepts stop being explained. Your reports start at ~300 lines and shrink toward ~100 as your known pile grows — and the depth budget shifts from Level 0 toward Level 3. A `profile.md` tracks your level **per domain** (you can be Level 2 on React and Level 0 on databases; the reports adapt to each).
 
+## The rest of the learning loop
+
+Reading isn't learning, so the digest is only stage one:
+
+- **Session inbox** (`learning/inbox.md`) — changes are captured as they happen, so the end-of-session digest is compiled, never recalled from memory. Long sessions stop losing their middle.
+- **"Quiz me"** — spaced review pulling 3 scenario questions from your most-overdue developing concepts. Correct answers promote concepts; misses get recorded and repaired in the next report.
+- **Misconception tracking** — say something that reveals a wrong mental model and the ledger remembers; the next relevant report corrects it head-on.
+- **"Walk me through report N"** — any past report becomes an interactive session, taught one level above where you are.
+- **Dashboard** (`learning/README.md`) — an auto-updated one-pager: known/developing counts, per-domain level bars with evidence, what's up for review.
+- **Graduation** — hit level 2.5 in a domain and the skill flips the script: you write the next small change, it reviews like a senior dev. The exit ramp from reading to doing.
+
+The full acceptance criteria behind these live in [`GOALS.md`](GOALS.md) — five stages (capture → selection → explanation → retention → progression) that every future change must strengthen.
+
 See [`examples/sample-report.md`](examples/sample-report.md) for a full report — note how `useState` (known) gets zero explanation while `debouncing` (new) gets the full treatment.
 
 ## Install

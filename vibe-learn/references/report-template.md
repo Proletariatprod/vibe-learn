@@ -52,6 +52,9 @@ the tradeoff accepted, what could break, what a senior dev would double-check.
 Claude decided that the user didn't specify — those unstated decisions are
 exactly what vibe coders need to learn to see.]
 
+**Try this next time:** "[the concrete prompt the user could have written to
+specify the biggest unstated decision themselves]"
+
 ## ❓ One question
 
 [A scenario-based application question about today's change. Never definition recall.]
@@ -159,8 +162,11 @@ Your one sentence became three decisions you didn't specify: (1) WHERE to
 check — middleware, not per-page; (2) WHAT to check — a session, not a
 password each time; (3) the post-login return trip via the `next` parameter.
 None of these were in your prompt — you got them for free, but now you know
-they're decisions, you can ask for them differently next time (e.g. "also
-protect the API routes").
+they're decisions, you can ask for them differently next time.
+
+**Try this next time:** "make people log in before seeing the dashboard —
+protect the API routes under /api/dashboard too, and send them back to the
+page they wanted after login."
 
 ## ❓ One question
 
