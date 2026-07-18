@@ -39,7 +39,7 @@ If `learning/` does not exist and the user wants learning reports:
    ├── inbox.md          # session capture log, compiled into each digest then cleared
    └── README.md         # auto-maintained progress dashboard (see references/ledger-format.md)
    ```
-2. Ask the user two quick calibration questions (or infer from conversation): roughly how much coding do they understand today, and do they want reports on everything or only on request?
+2. Ask the user three quick calibration questions (or infer from conversation): roughly how much coding do they understand today; do they want reports on everything or only on request; and how should reports be delivered — auto-opened in the browser (default), PDF in the folder, or emailed (see references/delivery.md). Record the delivery choice in profile.md.
 3. Add this line to the project's `CLAUDE.md` (create it if needed) so future sessions trigger reliably:
    ```
    After completing any meaningful code change, use the vibe-learn skill to generate a learning report in learning/reports/.
@@ -90,9 +90,11 @@ Total report length: **150–400 lines of markdown for early reports, shrinking 
 
 In `learning/concepts.md`: add new concepts (with their `builds on` prerequisites), increment counts on repeated ones, promote to "known" at 3 sightings, and record or clear misconceptions. In `learning/profile.md`: update level estimates if you saw evidence (user asked a Level 3 question → they're growing; user was confused by a Level 1 concept → recalibrate). Regenerate `learning/README.md` — the dashboard (see references/ledger-format.md for the format). Propagate to the global ledger (`~/.claude/vibe-learn/concepts.md`, create it on first promotion): concepts promoted to `known` here become known globally; demotions stay local. Finally, clear `learning/inbox.md` — its entries are now covered by this report.
 
-### Step 6: Close the loop in chat
+### Step 6: Deliver and close the loop
 
-After saving, refresh `learning/.last-report-state` if the project uses the Stop hook (see references/automation.md). Then tell the user in ONE short line: report number, the headline concept, and the report path. Do not paste the report into chat — that defeats the layered-reading design. Example: "📚 Learning report 007 saved (`learning/reports/007-auth-middleware.md`) — headline concept: middleware. Concepts now known: 12."
+After saving the .md, deliver per the `Report delivery` preference in profile.md — auto-opened HTML, PDF in `learning/reports/`, or email; exact recipes and fallback order in references/delivery.md. A terminal user should never have to go find the file: the seamless moment is the report appearing (browser tab, PDF, inbox) right as the session's work lands. Delivery failures never block anything — fall back a tier and say so.
+
+Refresh `learning/.last-report-state` if the project uses the Stop hook (see references/automation.md). Then tell the user in ONE short line: report number, the headline concept, and how it was delivered. Do not paste the report into chat — that defeats the layered-reading design. Example: "📚 Learning report 007 saved (`learning/reports/007-auth-middleware.md`) — headline concept: middleware. Concepts now known: 12."
 
 Every 5th report, add: offer a 3-question review quiz drawn from concepts at "developing" status. Keep it optional and light.
 
@@ -157,3 +159,4 @@ For large codebases, offer to do baseline one subsystem per session rather than 
 - `references/report-template.md` — exact report format with a full worked example. Read before writing the first report of a session.
 - `references/ledger-format.md` — format for `concepts.md` and `profile.md`, including status rules and domain levels.
 - `references/automation.md` — CLAUDE.md snippet and optional Claude Code hook config for deterministic (non-probabilistic) triggering. Point the user here if they ask why a report didn't auto-generate.
+- `references/delivery.md` — how reports reach the user: auto-opened HTML (zero deps), PDF in the folder, or email. Read when setting up delivery or when the user asks to change how reports arrive.

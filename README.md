@@ -35,6 +35,7 @@ Reading isn't learning, so the digest is only stage one:
 - **Dashboard** (`learning/README.md`) — an auto-updated one-pager: known/developing counts, per-domain level bars with evidence, what's up for review.
 - **Graduation** — hit level 2.5 in a domain and the skill flips the script: you write the next small change, it reviews like a senior dev. The exit ramp from reading to doing.
 - **Global ledger** (`~/.claude/vibe-learn/concepts.md`) — what you learn travels with you. A concept mastered in project one gets a one-line callback in project five, not the full lecture.
+- **Delivery, your way** — reports don't hide in a folder. Choose at setup: auto-open in your browser as styled HTML (zero dependencies), a PDF dropped in `learning/reports/`, or emailed to you with the plain-English summary as the body. Terminal sessions end with the report appearing, not with a file path to remember.
 
 The full acceptance criteria behind these live in [`GOALS.md`](GOALS.md) — five stages (capture → selection → explanation → retention → progression) that every future change must strengthen.
 

@@ -53,6 +53,7 @@ Scale: 0 = plain English only · 1 = knows the concepts · 2 = reads code · 3 =
 
 ## Preferences
 - Report cadence: [every change / session summaries / on request]
+- Report delivery: [markdown / html (auto-open) / pdf / email name@example.com via Mail.app] — see references/delivery.md
 - Depth priority: [e.g. "wants Level 3 emphasis on security topics"]
 - Quiz appetite: [loves them / tolerates them / skip]
 
