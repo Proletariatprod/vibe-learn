@@ -24,6 +24,10 @@ Plus two sections no other tool has:
 
 A **concept ledger** (`learning/concepts.md`) tracks every concept across reports: `new` → `developing` (2 sightings) → `known` (3+). Known concepts stop being explained. Your reports start at ~300 lines and shrink toward ~100 as your known pile grows — and the depth budget shifts from Level 0 toward Level 3. A `profile.md` tracks your level **per domain** (you can be Level 2 on React and Level 0 on databases; the reports adapt to each).
 
+## The learning path — one story per project
+
+Reports teach you a change. The **learning path** (`learning/path.md`) teaches you the *project*. It's a single evolving document, one per project, seeded at setup with **the Plan** — the intended shape and the thinking behind it, in plain English — then grown one milestone per report. Each milestone is tagged `on-plan`, `detour`, or `new territory`, so over time you watch how a real project drifts from its first plan and *why*. A living **horizon** section, rewritten every update, shows the 2–3 places the code could go next. Read it top-to-bottom after a month away and the whole thing — where you started, how it got here, where it's headed — comes back at once. Reports are the deep-dives; the path is the thread joining them.
+
 ## The rest of the learning loop
 
 Reading isn't learning, so the digest is only stage one:

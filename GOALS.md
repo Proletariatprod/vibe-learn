@@ -23,6 +23,15 @@ That mission decomposes into exactly five stages. Every feature, fix, or PR to t
 | 3 Explanation | ✅ | Four-layer template, exact-snippet rule, fitted-metaphor rule, ledger compression |
 | 4 Retention | ✅ | `/quiz` review mode, misconception tracking in ledger, demote-and-re-explain rule |
 | 5 Progression | ✅ | Per-domain levels, dashboard (`learning/README.md`), graduation mechanic at level 2.5+ |
+| 6 Continuity | ✅ | Learning path (`learning/path.md`): Plan seeded at setup, milestone thread, rewritten horizon |
+
+## The sixth stage: Continuity
+
+The first five stages make each *change* legible. Stage 6 makes the *whole project* legible as one evolving story — the piece that lets a user understand not just "what did this change do" but "what am I building, how did it get this shape, and where can it go." One learning path per project, seeded by the Plan (the thinking, up front) and grown one milestone per report with a living horizon of what's next.
+
+| # | Stage | Pass criterion |
+|---|-------|----------------|
+| 6 | **Continuity** | A user reads `path.md` top-to-bottom after a month away and understands the project's intended shape, how the code actually evolved (on-plan vs. detours), and the plausible next moves. Reports are the deep-dives; the path is the thread joining them. |
 
 ## Definition of "seamless"
 

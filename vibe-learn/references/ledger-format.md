@@ -118,6 +118,8 @@ Regenerated after every report and quiz — the user's at-a-glance "am I actuall
 # Your learning dashboard
 *Updated after report 011 — 2026-07-15*
 
+📖 Read the full story of this project: [the learning path](path.md)
+
 **Concepts:** 12 known · 5 developing · 3 new — 20 total across 4 domains
 
 ## Where you are

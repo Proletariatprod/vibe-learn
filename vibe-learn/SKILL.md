@@ -34,17 +34,19 @@ If `learning/` does not exist and the user wants learning reports:
    ```
    learning/
    ├── reports/          # one markdown file per report
+   ├── path.md           # the project's single evolving learning path (see references/learning-path.md)
    ├── concepts.md       # cumulative concept ledger (see references/ledger-format.md)
    ├── profile.md        # learner level + preferences (see references/ledger-format.md)
    ├── inbox.md          # session capture log, compiled into each digest then cleared
    └── README.md         # auto-maintained progress dashboard (see references/ledger-format.md)
    ```
 2. Ask the user three quick calibration questions (or infer from conversation): roughly how much coding do they understand today; do they want reports on everything or only on request; and how should reports be delivered — auto-opened in the browser (default), PDF in the folder, or emailed (see references/delivery.md). Record the delivery choice in profile.md.
-3. Add this line to the project's `CLAUDE.md` (create it if needed) so future sessions trigger reliably:
+3. **Seed the learning path.** Create `learning/path.md` and write its **Plan** section — the project's intended shape and the thinking behind it (see references/learning-path.md). If a plan already exists (plan mode output, a PRD, a README roadmap, or the goal the user just described), ingest it and surface the *why* behind the shape. If not, ask two or three quick questions about what they're building, then draft the Plan and show it. This is the "explain its thinking" starting point the whole path grows from — do it once, before the first code milestone. On a **baseline** run into an existing codebase, seed the Plan from the survey (Baseline mode step 2) instead, marking it "reconstructed from the code as it stands."
+4. Add this line to the project's `CLAUDE.md` (create it if needed) so future sessions trigger reliably:
    ```
    After completing any meaningful code change, use the vibe-learn skill to generate a learning report in learning/reports/.
    ```
-4. Tell the user about `references/automation.md` if they want fully deterministic triggering via hooks.
+5. Tell the user about `references/automation.md` if they want fully deterministic triggering via hooks.
 
 ## Generating a report
 
@@ -86,7 +88,9 @@ Save to `learning/reports/NNN-short-slug.md` (zero-padded sequence: `001-`, `002
 
 Total report length: **150–400 lines of markdown for early reports, shrinking toward 50–150 as the ledger fills with known concepts.** If your report exceeds this, you selected too much in Step 3.
 
-### Step 5: Update the ledger, dashboard, and inbox
+### Step 5: Update the path, ledger, dashboard, and inbox
+
+Update `learning/path.md` (see references/learning-path.md): **append one milestone node** to *The Path so far* — project-level only (what the app can now do, whether it was `on-plan`/`detour`/`new territory`, what it unlocked, and a link to this report) — and **rewrite the horizon** with 2–3 plausible next evolutions given the new state. If the change was a structural pivot away from the Plan, add a dated revision line rather than silently editing the Plan. This is the thread that lets the user follow the project's whole evolution; it costs a few lines per report.
 
 In `learning/concepts.md`: add new concepts (with their `builds on` prerequisites), increment counts on repeated ones, promote to "known" at 3 sightings, and record or clear misconceptions. In `learning/profile.md`: update level estimates if you saw evidence (user asked a Level 3 question → they're growing; user was confused by a Level 1 concept → recalibrate). Regenerate `learning/README.md` — the dashboard (see references/ledger-format.md for the format). Propagate to the global ledger (`~/.claude/vibe-learn/concepts.md`, create it on first promotion): concepts promoted to `known` here become known globally; demotions stay local. Finally, clear `learning/inbox.md` — its entries are now covered by this report.
 
@@ -133,7 +137,8 @@ Per-change reports need a change. For a codebase that existed before vibe-learn 
 4. **Write one report per subsystem**, in dependency order (data layer before the features that use it), numbered 001 onward. **Hard cap: 6 baseline reports total.** Baseline is a foundation, not complete coverage — a codebase with 30 concepts still gets max 3 new concepts per report; everything else gets taught naturally by future per-change reports. Resist the urge to be exhaustive: an unread 15-report baseline teaches less than a read 4-report one.
 5. **Template adaptations for baseline reports** (everything else identical): Level 0 heading becomes "What this piece does"; the "Your words → this code" section becomes **"🔗 Decisions already baked in"** — surface the 2–3 biggest unstated architectural decisions embedded in this subsystem (chosen framework, storage approach, where secrets live), because the user likely never consciously made them.
 6. **Seed the ledger** with every concept materially explained, and write `profile.md` from the calibration answers.
-7. Per-change mode then continues numbering where baseline stopped.
+7. **Seed the path** (`learning/path.md`): write the Plan section as the architecture *reconstructed from the code as it stands* (see references/learning-path.md), and add report 000's tour as the first milestone node. From here the path grows normally.
+8. Per-change mode then continues numbering where baseline stopped.
 
 For large codebases, offer to do baseline one subsystem per session rather than all at once — six deep reports in one shot burns context and produces a worse tour.
 
@@ -156,6 +161,7 @@ For large codebases, offer to do baseline one subsystem per session rather than 
 
 ## References
 
+- `references/learning-path.md` — the single per-project `path.md`: the Plan (seeded at setup), the milestone thread, and the horizon. Read when setting up a project or updating the path after a report.
 - `references/report-template.md` — exact report format with a full worked example. Read before writing the first report of a session.
 - `references/ledger-format.md` — format for `concepts.md` and `profile.md`, including status rules and domain levels.
 - `references/automation.md` — CLAUDE.md snippet and optional Claude Code hook config for deterministic (non-probabilistic) triggering. Point the user here if they ask why a report didn't auto-generate.
